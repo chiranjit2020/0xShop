@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>0xShop — Home</title>
+
+    <!-- IBM Plex Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js (light-weight interactivity) -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --panel: #0f0f10;
+            --border: #1e1e1e;
+            --muted: #6b7280;
+            --neon: #00FF88;
+            --vscode: #007acc;
+            --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+        }
+
+        body {
+            background: var(--bg);
+            color: #e6eef3;
+            font-family: var(--mono);
+        }
+
+        /* Thin border style used by many elements */
+        .thin-border {
+            border: 1px solid var(--border);
+        }
+
+        /* Terminal line */
+        .term-line {
+            color: var(--neon);
+            font-size: 0.92rem;
+        }
+
+        /* Subtle dim text */
+        .dim {
+            color: #9ca3af;
+        }
+
+        /* Focus ring for keyboard friendly */
+        .focus-ring:focus {
+            outline: 2px solid rgba(0, 255, 136, 0.12);
+            outline-offset: 2px;
+        }
+
+        /* Command palette style */
+        .cmd-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--neon);
+            cursor: pointer;
+        }
+
+        /* Hide scrollbar but allow scroll (clean terminal look) */
+        .no-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .no-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 6px;
+        }
+
+        /* small screens adjustments */
+        @media (max-width: 768px) {
+            aside.w-56 {
+                display: none;
+            }
+
+            /* hide left sidebar on mobile for space */
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+
+    <!-- Root (Alpine.js state) -->
+    <div x-data="site()" x-init="init()" class="min-h-screen flex">
+
+        <!-- LEFT: VS Code-like Sidebar -->
+        <aside class="w-56 thin-border p-4" aria-hidden="false">
+            <div class="mb-6">
+                <div class="text-xs dim">EXPLORER</div>
+                <div class="mt-3 space-y-2 text-sm">
+                    <a href="#" @click.prevent="goHome" class="block hover:text-[var(--neon)]">/home</a>
+                    <a href="#" @click.prevent="openShop" class="block hover:text-[var(--neon)]">/shop</a>
+                    <a href="#" @click.prevent="toggleMiniCart" class="block hover:text-[var(--neon)]">/cart</a>
+                    <a href="#" @click.prevent="openCheckout" class="block hover:text-[var(--neon)]">/checkout</a>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <div class="text-xs dim">COMMANDS</div>
+                <div class="mt-2 text-sm">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.5 thin-border text-[10px] dim">Ctrl+P</span>
+                        <span class="dim text-xs">command palette</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-2">
+                        <span class="px-2 py-0.5 thin-border text-[10px] dim">a</span>
+                        <span class="dim text-xs">toggle minicart</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <div class="text-xs dim">BRAND</div>
+                <div class="mt-2">
+                    <div class="text-lg font-semibold">0xShop</div>
+                    <div class="text-[12px] dim">Buy Like a Hacker</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN: content + terminal -->
+        <main class="flex-1 p-6 overflow-hidden flex flex-col">
+
+            <!-- Top tabs (VS Code style) -->
+            <div class="flex items-center gap-2 mb-4">
+                <div class="px-3 py-1 thin-border bg-[#070707] text-sm">home.js</div>
+                <div class="px-3 py-1 thin-border text-sm">shop.js</div>
+                <div class="px-3 py-1 thin-border text-sm">cart.js</div>
+                <div class="ml-auto text-sm dim">0xShop — Terminal UI</div>
+            </div>
+
+            <div class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 overflow-hidden">
+
+                <!-- TERMINAL PANEL (left/main area of grid) -->
+                <section class="lg:col-span-2 thin-border p-5 overflow-auto no-scrollbar" id="terminalPanel">
+<div class="p-6 font-mono text-sm text-gray-300">
+
+    <h2 class="text-red-400 text-lg mb-6">/error — kernel panic</h2>
+
+    <!-- Panic Box -->
+    <div class="bg-black border border-red-500 rounded-md p-6">
+
+<pre class="text-red-400 text-xs leading-relaxed">
+┌──────────────────────────────────────────────┐
+│                !! KERNEL PANIC !!            │
+├──────────────────────────────────────────────┤
+│  The page you requested has crashed the OS.  │
+│  A fatal exception 0x404 occurred at:        │
+│                                              │
+│      address → /page/not/found               │
+│      register → EIP=0x00000000               │
+│      stack    → SEGFAULT                     │
+│                                              │
+│  System attempted to recover but failed.     │
+│  Possible causes:                            │
+│    • mistyped URL                            │
+│    • quantum bit flip (unlikely)             │
+│    • developer error (very likely)           │
+└──────────────────────────────────────────────┘
+</pre>
+
+    </div>
+
+    <!-- Logs -->
+    <div class="bg-black border border-[#222] rounded-md p-4 mt-6 text-green-400 text-xs">
+        <div>> scanning filesystem...</div>
+        <div>> route not found.</div>
+        <div>> initiating fallback routine...</div>
+        <div>> kernel panic triggered.</div>
+        <div>> awaiting user action...</div>
+    </div>
+
+    <!-- Actions -->
+    <div class="mt-6 grid sm:grid-cols-2 gap-4">
+
+        <a href="index.html"
+           class="w-full text-center border border-green-500 text-green-400 py-2 rounded hover:bg-green-500 hover:text-black">
+            [ return to home ]
+        </a>
+
+        <a href="shop.html"
+           class="w-full text-center border border-blue-500 text-blue-400 py-2 rounded hover:bg-blue-500 hover:text-black">
+            [ go to shop ]
+        </a>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+                    <!-- Quick intro / features (like README.md) -->
+                    <div class="mt-5 border-t border-[var(--border)] pt-4 text-sm dim">
+                        <pre class="whitespace-pre-wrap">
+> What is 0xShop?
+0xShop is a developer-first eCommerce experience — browse packages, peripherals,
+and tools using a CLI-inspired interface. Everything is optimized for keyboard
+users and people who find comfort in a terminal.
+
+Tips:
+ - Press Ctrl+P to open the command palette
+ - Press 'a' to toggle the mini-cart
+ - Use the left explorer to jump pages
+          </pre>
+                    </div>
+
+                </section>
+
+                <!-- RIGHT: Mini Cart / Utilities -->
+                <aside class="thin-border p-4" id="rightPanel">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="text-xs dim">MINI-CART</div>
+                        <div class="text-xs dim">items: <span x-text="cart.length"></span></div>
+                    </div>
+
+                    <div class="space-y-3 text-sm" id="miniCartContent">
+                        <template x-if="cart.length === 0">
+                            <div class="text-neutral-500">Cart is empty — add something nerdy</div>
+                        </template>
+
+                        <template x-for="(it, i) in cart" :key="i">
+                            <div class="thin-border p-3">
+                                <div class="flex items-start justify-between">
+                                    <div>
+                                        <div class="text-sm" x-text="it.name"></div>
+                                        <div class="dim text-xs">#id: <span x-text="it.id"></span></div>
+                                    </div>
+                                    <div class="text-sm">₹<span x-text="it.price"></span></div>
+                                </div>
+                                <div class="mt-2 flex items-center gap-2">
+                                    <button @click="removeFromCart(i)"
+                                        class="text-xs thin-border px-2 py-1 hover:text-red-400">[ remove ]</button>
+                                    <button @click="openCheckout"
+                                        class="text-xs thin-border px-2 py-1 hover:text-[var(--neon)]">[ checkout
+                                        ]</button>
+                                </div>
+                            </div>
+                        </template>
+
+                    </div>
+
+                    <hr class="border-[var(--border)] my-4" />
+
+                    <div class="text-xs dim">TOTAL</div>
+                    <div class="text-2xl">₹<span x-text="total"></span></div>
+
+                    <div class="mt-4">
+                        <button @click="openCheckout" class="w-full thin-border px-3 py-2 hover:text-[var(--neon)]">[ go
+                            to checkout ]</button>
+                    </div>
+
+                </aside>
+
+            </div>
+
+            <!-- Status bar (bottom) -->
+            <div class="mt-4 thin-border p-3 text-xs flex items-center justify-between">
+                <div class="dim">Items: <span x-text="cart.length"></span> • Mode: Dev</div>
+                <div class="dim">Ping: <span x-text="ping"></span>ms • © 0xShop — Buy Like a Hacker · made with ⚡ by
+                    Codeworm</div>
+
+            </div>
+
+        </main>
+
+        <!-- MINI CART slide-over (mobile & quick toggle) -->
+        <div x-show="miniCartOpen" x-cloak x-transition:enter="transition transform duration-200"
+            x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition transform duration-200" x-transition:leave-end="translate-x-full"
+            class="fixed right-0 top-0 h-full w-80 bg-[var(--panel)] thin-border p-4 z-40">
+            <div class="flex items-center justify-between mb-4">
+                <div class="text-sm dim">mini-cart (quick)</div>
+                <button @click="toggleMiniCart" class="px-2 py-1 thin-border">close</button>
+            </div>
+
+            <div class="space-y-3 overflow-auto h-[70%]">
+                <template x-if="cart.length === 0">
+                    <div class="dim">No items yet</div>
+                </template>
+
+                <template x-for="(it, idx) in cart" :key="idx">
+                    <div class="thin-border p-3">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div x-text="it.name"></div>
+                                <div class="dim text-xs">id: <span x-text="it.id"></span></div>
+                            </div>
+                            <div>₹<span x-text="it.price"></span></div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <div class="mt-4">
+                <div class="dim">Total</div>
+                <div class="text-xl">₹<span x-text="total"></span></div>
+                <div class="mt-3">
+                    <button @click="openCheckout" class="w-full thin-border px-3 py-2 hover:text-[var(--neon)]">[
+                        checkout ]</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Command Palette (Ctrl+P) -->
+        <div x-show="cmdOpen" x-cloak @keydown.window.escape="closeCmd()"
+            class="fixed inset-0 flex items-start justify-center pt-20 z-50">
+            <div class="w-[720px] thin-border bg-[#071017] p-3 shadow-lg">
+                <input x-ref="cmd" x-model="cmdQuery" @input="filterCmds" @keydown.enter.prevent="runCmd"
+                    placeholder="Type a command — e.g. open shop, toggle minicart, open cart"
+                    class="w-full bg-transparent border-b border-[var(--border)] p-3 text-sm focus:outline-none" />
+
+                <div class="mt-2 max-h-64 overflow-auto">
+                    <template x-for="(c, i) in filteredCmds" :key="i">
+                        <div @click="selectCmd(c)" class="p-2 cmd-item text-sm thin-border mb-1">
+                            <div class="flex items-center justify-between">
+                                <div x-text="c.label"></div>
+                                <div class="dim text-xs" x-text="c.short"></div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template x-if="filteredCmds.length === 0">
+                        <div class="p-2 dim">No commands found</div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function site() {
+            return {
+                logs: [
+                    '> booting 0xShop...',
+                    '✔ ui loaded',
+                    '> suggest: press Ctrl+P for command palette'
+                ],
+                cart: [],
+                miniCartOpen: false,
+                cmdOpen: false,
+                cmdQuery: '',
+                filteredCmds: [],
+                ping: 21,
+                init() {
+                    // initial filtered commands
+                    this.filteredCmds = this.commands();
+                    // keyboard listeners
+                    window.addEventListener('keydown', (e) => {
+                        // Ctrl+P to open command palette
+                        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') {
+                            e.preventDefault();
+                            this.openCmd();
+                        }
+                        // 'a' to toggle minicart (developer shortcut)
+                        if (!e.ctrlKey && !e.metaKey && e.key.toLowerCase() === 'a') {
+                            if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+                                this.toggleMiniCart();
+                            }
+                        }
+                    });
+                },
+                initScroll() {
+                    // scroll terminal logs to bottom
+                    this.$nextTick && this.$nextTick(() => {
+                        const el = document.getElementById('terminalLogs');
+                        if (el) el.scrollTop = el.scrollHeight;
+                    });
+                },
+                pushLog(text) {
+                    this.logs.push(text);
+                    // limit logs
+                    if (this.logs.length > 200) this.logs.shift();
+                    // auto scroll
+                    setTimeout(() => {
+                        const el = document.getElementById('terminalLogs');
+                        if (el) el.scrollTop = el.scrollHeight;
+                    }, 40);
+                },
+                addToCart(product) {
+                    this.cart.push(product);
+                    this.pushLog(`> add "${product.name}"`);
+                    this.pushLog(`✔ item added to cart (${this.cart.length} items total)`);
+                    this.updateTotal();
+                },
+                removeFromCart(index) {
+                    const removed = this.cart.splice(index, 1)[0];
+                    this.pushLog(`> remove "${removed.name}"`);
+                    this.pushLog(`✔ removed (${this.cart.length} items total)`);
+                    this.updateTotal();
+                },
+                toggleMiniCart() {
+                    this.miniCartOpen = !this.miniCartOpen;
+                    this.pushLog(this.miniCartOpen ? '> minicart opened' : '> minicart closed');
+                },
+                openShop() {
+                    // mimic loading and redirect (for static demo, use #)
+                    this.pushLog('> open shop');
+                    setTimeout(() => {
+                        // in a real app you'd navigate to /shop
+                        this.pushLog('✔ shop ready — navigate to /shop');
+                        // For demo, you can uncomment to actually open a real page 'shop.html'
+                        // window.location.href = '/shop.html';
+                    }, 300);
+                },
+                openCheckout() {
+                    this.pushLog('> open checkout');
+                    setTimeout(() => {
+                        this.pushLog('✔ checkout ready — navigate to /checkout');
+                        // window.location.href = '/checkout.html';
+                    }, 300);
+                },
+                goHome() {
+                    this.pushLog('> open home');
+                },
+                updateTotal() {
+                    // reactive computed
+                    this.total = this.cart.reduce((s, i) => s + Number(i.price), 0);
+                },
+                get total() {
+                    return this._total || 0;
+                },
+                set total(v) {
+                    this._total = v;
+                },
+                // Command palette
+                commands() {
+                    return [
+                        { label: 'open shop', action: () => this.openShop(), short: 'open /shop' },
+                        { label: 'open cart', action: () => this.toggleMiniCart(), short: 'toggle minicart' },
+                        { label: 'open checkout', action: () => this.openCheckout(), short: 'go to checkout' },
+                        { label: 'add sample keyboard', action: () => this.addSample(), short: 'add demo item' },
+                        { label: 'clear logs', action: () => this.clearLogs(), short: 'clear terminal' },
+                    ];
+                },
+                openCmd() {
+                    this.cmdOpen = true;
+                    this.cmdQuery = '';
+                    this.filteredCmds = this.commands();
+                    setTimeout(() => {
+                        if (this.$refs && this.$refs.cmd) this.$refs.cmd.focus();
+                    }, 20);
+                },
+                closeCmd() {
+                    this.cmdOpen = false;
+                    this.cmdQuery = '';
+                },
+                filterCmds() {
+                    const q = this.cmdQuery.trim().toLowerCase();
+                    const all = this.commands();
+                    if (!q) this.filteredCmds = all;
+                    else this.filteredCmds = all.filter(c => c.label.includes(q) || c.short.includes(q));
+                },
+                selectCmd(c) {
+                    this.cmdQuery = c.label;
+                    this.runCmd();
+                },
+                runCmd() {
+                    const q = this.cmdQuery.trim().toLowerCase();
+                    const all = this.commands();
+                    const found = all.find(c => c.label === q);
+                    if (found) {
+                        found.action();
+                        this.pushLog(`> ${found.label}`);
+                        this.pushLog('✔ command executed');
+                        this.closeCmd();
+                        return;
+                    }
+                    // fallback simple parser
+                    if (q.startsWith('open shop')) { this.openShop(); this.pushLog('✔ shop opened'); this.closeCmd(); return; }
+                    if (q.startsWith('open cart')) { this.toggleMiniCart(); this.pushLog('✔ cart toggled'); this.closeCmd(); return; }
+                    if (q.startsWith('add ')) {
+                        // add sample product with name after add
+                        const name = this.cmdQuery.slice(4).trim() || 'Sample Item';
+                        this.addToCart({ id: Math.random().toString(36).slice(2, 8), name, price: 999 });
+                        this.closeCmd();
+                        return;
+                    }
+                    this.pushLog(`✖ unknown command: ${this.cmdQuery}`);
+                    this.closeCmd();
+                },
+                selectCmdByIndex(i) {
+                    if (this.filteredCmds[i]) this.selectCmd(this.filteredCmds[i]);
+                },
+                clearLogs() {
+                    this.logs = [];
+                    this.pushLog('> logs cleared');
+                },
+                addSample() {
+                    const sample = { id: 'kbd001', name: 'Mechanical Keyboard', price: 4999 };
+                    this.addToCart(sample);
+                },
+                products: [
+                    { id: 1, name: "Debug Duck", desc: "Rubber duck for debugging.", price: 299 },
+                    { id: 2, name: "404 Stickers", desc: "Stickers that don't exist.", price: 199 },
+                    { id: 3, name: "Syntax T-Shirt", desc: "Wear your errors proudly.", price: 799 },
+                    { id: 4, name: "0xCoffee Mug", desc: "Fuel for late commits.", price: 349 },
+                    { id: 5, name: "Binary Socks", desc: "01010011 01101111 01100011 01101011 01110011", price: 499 },
+                    { id: 6, name: "Git Notebook", desc: "Journal before you push.", price: 249 },
+                ],
+
+                addToCart(product) {
+                    const item = this.cart.find(i => i.id === product.id);
+                    if (item) item.qty++;
+                    else this.cart.push({ ...product, qty: 1 });
+
+                    this.logs.push({ time: Date.now(), msg: `> added ${product.name}` });
+                },
+            }
+        }
+    </script>
+
+
+    <script>
+
+
+    </script>
+
+</body>
+
+</html>
